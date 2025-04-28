@@ -15,6 +15,14 @@ const NavBar = () => {
       navigate("/adminlogin"); // redirect to login after logout
     };
 
+    const handleDashboard = () => {
+      navigate("/adminDashboard");
+    }
+
+    const handleHome = () => {
+      navigate("/");
+    }
+
     return (
         <div className="border-b">
   <div className="container mx-auto px-4 py-2 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -63,8 +71,8 @@ const NavBar = () => {
       <div className="flex items-center space-x-2">
         {admin ? (
           <>
-            <Button variant="ghost" className="hover:cursor-pointer">Home</Button>
-            <Button variant="ghost" className="hover:cursor-pointer">Dashboard</Button>
+            <Button variant="ghost" className="hover:cursor-pointer" onClick={handleHome}>Home</Button>
+            <Button variant="ghost" className="hover:cursor-pointer" onClick={handleDashboard}>Dashboard</Button>
             <Button 
               variant="outline"
               className="bg-blue-500 text-white hover:cursor-pointer hover:bg-blue-600"
@@ -88,8 +96,8 @@ const NavBar = () => {
     {/* Stack Buttons for Small Devices */}
     {admin && (
       <div className="flex flex-col sm:hidden gap-2">
-        <Button variant="ghost" className="hover:cursor-pointer">Home</Button>
-        <Button variant="ghost" className="hover:cursor-pointer">Dashboard</Button>
+        <Button variant="ghost" className="hover:cursor-pointer" onClick={handleHome}>Home</Button>
+        <Button variant="ghost" className="hover:cursor-pointer" onClick={handleDashboard}>Dashboard</Button>
       </div>
     )}
   </div>
