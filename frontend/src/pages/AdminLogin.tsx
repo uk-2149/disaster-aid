@@ -1,12 +1,13 @@
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
-import axios from '../utils/axios';
+// import axios from '../utils/axios';
 import { useState } from 'react';
-
+import { useNavigate } from "react-router-dom";
 
 const AdminLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const navigate = useNavigate();
   const auth = getAuth();
 
   const login = async (email: string, password: string) => {
@@ -16,9 +17,11 @@ const AdminLogin = () => {
   
       // Save token to localStorage
       localStorage.setItem('token', token);
+
+      navigate('/');
   
       // Example call to protected API
-      await axios.get('/api/protected');  
+      // await axios.get('/api/protected');  
     } catch (error) {
       console.error(error);
     }
@@ -30,7 +33,10 @@ const AdminLogin = () => {
   <div className="max-w-md w-full bg-white rounded-xl shadow-lg p-8">
     <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">Sign In</h2>
     
-    <form className="space-y-4" onSubmit={() => login(email, password)}>
+    <form className="space-y-4" onSubmit={(e) => {
+    e.preventDefault(); 
+    login(email, password);
+  }}>
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
         <input 
