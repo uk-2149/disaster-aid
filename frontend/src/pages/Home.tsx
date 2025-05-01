@@ -36,21 +36,21 @@ const Home = () => {
     return unsubscribe;
   }, []);
 
-  const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  // const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const file = e.target.files?.[0];
+  //   if (!file) return;
 
-    try {
-      const storageRef = ref(storage, `photos/${Date.now()}_${file.name}`);
-      const snapshot = await uploadBytes(storageRef, file);
-      const downloadURL = await getDownloadURL(snapshot.ref);
-      setDownloadUrl(downloadURL);
-      setFormData({ ...formData, photo: downloadURL });
-    } catch (error) {
-      console.error('Error uploading photo:', error);
-      alert('Failed to upload photo. Please try again.');
-    }
-  };
+  //   try {
+  //     const storageRef = ref(storage, `photos/${Date.now()}_${file.name}`);
+  //     const snapshot = await uploadBytes(storageRef, file);
+  //     const downloadURL = await getDownloadURL(snapshot.ref);
+  //     setDownloadUrl(downloadURL);
+  //     setFormData({ ...formData, photo: downloadURL });
+  //   } catch (error) {
+  //     console.error('Error uploading photo:', error);
+  //     alert('Failed to upload photo. Please try again.');
+  //   }
+  // };
 
   const getLocation = () => {
     navigator.geolocation.getCurrentPosition(

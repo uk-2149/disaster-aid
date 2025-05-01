@@ -12,12 +12,12 @@ interface Props {
 const RequestForm: React.FC<Props> = ({
   formData,
   setFormData,
-  handlePhotoUpload,
+  // handlePhotoUpload,
   getLocation,
   submitRequest
 }) => {
   return (
-    <form onSubmit={submitRequest} className="max-w-lg w-full mx-auto p-6 bg-gray-100 shadow-lg rounded-lg space-y-4">
+    <form onSubmit={submitRequest} className="max-w-lg w-full mx-auto p-6 bg-gray-100 shadow-lg rounded-lg space-y-4" action="/upload" method='POST' encType='multipart/form-data'>
   <div>
     <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
       Name
@@ -74,7 +74,7 @@ const RequestForm: React.FC<Props> = ({
       title="image"
       type="file"
       accept="image/*"
-      onChange={handlePhotoUpload}
+      // onChange={handlePhotoUpload}
       className="w-full bg-white"
     />
   </div>
