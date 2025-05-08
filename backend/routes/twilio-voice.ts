@@ -1,14 +1,23 @@
-import express from "express";
-import { Request, Response } from "express";
+import express, { Request, Response, NextFunction, RequestHandler } from "express";
 import admin from "firebase-admin";
-import VoiceResponse from "twilio/lib/twiml/VoiceResponse";
+import twilio from "twilio";
 import { db } from "../firebase/firebase";
-import { geocodeLocation, verifyDisasterZone } from "../controllers/location"
-import { parseTranscription } from "../controllers/parseTranscription"
+import { geocodeLocation, verifyDisasterZone } from "../controllers/location";
+import { parseTranscription } from "../controllers/parseTranscription";
+import cors from "cors";
 
+const VoiceResponse = twilio.twiml.VoiceResponse;
 const router = express.Router();
 
-router.post("/twilio-voice", async (req: Request, res: Response) => {
+// Enable CORS
+router.use(cors());
+
+// Twilio credentials
+const TWILIO_ACCOUNT_SID = process.env.TWILIO_ACCOUNT_SID;
+const TWILIO_AUTH_TOKEN = process.env.TWILIO_AUTH_TOKEN;
+
+// Twilio webhook
+router.post("/", async (req: Request, res: Response) => {
   const { TranscriptionText, RecordingUrl, From } = req.body;
   const twiml = new VoiceResponse();
 
@@ -30,7 +39,7 @@ router.post("/twilio-voice", async (req: Request, res: Response) => {
           needs: needs || "Unknown",
           location: { address: "Unknown" },
           status: "pending_manual",
-          source: "audio",
+          source: "call",
           phone: From,
           recording: RecordingUrl,
           timestamp: admin.firestore.FieldValue.serverTimestamp(),
@@ -43,12 +52,13 @@ router.post("/twilio-voice", async (req: Request, res: Response) => {
           needs: needs || "Unknown",
           location: { ...coords, address: location },
           status: isDisasterZone ? "pending" : "pending_manual",
-          source: "audio",
+          source: "call",
           phone: From,
           recording: RecordingUrl,
           timestamp: admin.firestore.FieldValue.serverTimestamp(),
         });
       }
+
       twiml.say("Thank you, your request has been received.");
     } catch (error) {
       console.error("Transcription error:", error);
@@ -59,4 +69,17 @@ router.post("/twilio-voice", async (req: Request, res: Response) => {
   res.type("text/xml").send(twiml.toString());
 });
 
-module.exports = router;
+// Error handler for rateLimitTwilio JSON errors
+router.use((err: any, req: Request, res: Response, next: NextFunction) => {
+  const twiml = new VoiceResponse();
+  if (err.status === 400) {
+    twiml.say("Missing phone number. Cannot process request.");
+  } else if (err.status === 429) {
+    twiml.say("You have already made a request recently. Please try again after some time.");
+  } else {
+    twiml.say("An error occurred. Please try again.");
+  }
+  res.type("text/xml").send(twiml.toString());
+});
+
+export default router;

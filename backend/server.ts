@@ -1,32 +1,24 @@
 require("dotenv").config();
 import express from "express";
-import twilio from "twilio";
-import axios from "axios";
-import { cors } from "cors";
-import { Timestamp } from "firebase-admin/firestore";
-import { rateLimitTWilio } from "./controllers/rateLimitTwilio";
-import uploadRoute from "./routes/upload";
+import { authenticate } from './middlewares/authMiddleware';
+import getRec from "./routes/getRec";
+import twilioVoiceRoute from "./routes/twilio-voice";
+import cors from "cors";
+import { rateLimitTwilio } from "./controllers/rateLimitTwilio";
 
-export const app = express();
-app.use(express.urlencoded({ extended: true }));
+const app = express();
+
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
+// Routes
+app.use("/api/recording", authenticate, getRec);
 
-// Twilio Setup
-const accountSid = process.env.TWILIO_ACCOUNT_SID;
-const authToken = process.env.TWILIO_AUTH_TOKEN;
-const client = twilio(accountSid, authToken);
+// Twilio routes with rate limiting
+app.use("/twilio-voice", rateLimitTwilio, twilioVoiceRoute);
 
-
-// Rate Limiting Middleware
-
-
-app.use("/twilio-voice", rateLimitTWilio);
-app.use('/api/upload', uploadRoute);
-
-app.use("/api/auth", require("./routes/auth"));
-app.use("/twilio-voice", require("./routes/twilio-voice"));
-
-
-app.listen(3000, () => console.log("Server running on port 3000"));
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});

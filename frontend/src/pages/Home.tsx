@@ -1,10 +1,10 @@
-import React, { useState, useEffect, FormEvent } from 'react';
+import { useState, useEffect, FormEvent } from 'react';
 import NavBar from '../components/NavBar';
 import RequestForm from '../components/RequestForm';
 import { signInAnonymously, User } from 'firebase/auth';
 import { db, auth, storage } from '../firebase/config';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+// import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { RequestData } from '../types/RequestData';
 
 const Home = () => {
@@ -16,6 +16,7 @@ const Home = () => {
     needs: '',
     photo: null,
     location: null,
+    phone: ''
   });
 
   // Handle authentication
@@ -68,20 +69,21 @@ const Home = () => {
   };
 
   const verifyDisasterZone = async (lat: number, lng: number): Promise<boolean> => {
-    return true; // Replace with actual logic
+    return true; 
   };
 
   const submitRequest = async (e: FormEvent) => {
     e.preventDefault();
-    // if (!formData.location || !downloadUrl) {
-    //   alert('Please provide location and photo.');
-    //   return;
-    // }
+    if (!formData.location) {
+      alert('Please provide location');
+      return;
+    }
 
     try {
       await addDoc(collection(db, 'requests'), {
         name: formData.name,
         needs: formData.needs,
+        message: formData.message,
         location: formData.location,
         photo: downloadUrl,
         status: 'pending',
@@ -89,7 +91,7 @@ const Home = () => {
         timestamp: serverTimestamp(),
         uid: user?.uid,
       });
-      setFormData({ name: '', message: '', needs: '', photo: null, location: null });
+      setFormData({ name: '', message: '', needs: '', photo: null, location: null, phone: '' });
       setDownloadUrl('');
       alert('Request submitted successfully!');
     } catch (error) {
@@ -99,18 +101,18 @@ const Home = () => {
   };
 
   return (
-    <>
+    <div className='bg-gray-100'>
       <NavBar />
       <div className="min-h-[calc(100vh-3rem)] flex items-center justify-center px-4">
         <RequestForm
           formData={formData}
           setFormData={setFormData}
-          handlePhotoUpload={handlePhotoUpload}
+          // handlePhotoUpload={handlePhotoUpload}
           getLocation={getLocation}
           submitRequest={submitRequest}
         />
       </div>
-    </>
+    </div>
   );
 };
 

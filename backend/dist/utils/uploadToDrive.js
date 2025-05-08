@@ -1,7 +1,7 @@
+"use strict";
 // import { google } from 'googleapis';
 // import { auth } from '../config/driveAuth';
 // import { Readable } from 'stream';
-
 // export const uploadToDrive = async (
 //   fileBuffer: Buffer,
 //   filename: string,
@@ -9,7 +9,6 @@
 //   folderId: string
 // ): Promise<string> => {
 //   const drive = google.drive({ version: 'v3', auth });
-
 //   const response = await drive.files.create({
 //     requestBody: {
 //       name: filename,
@@ -21,13 +20,10 @@
 //     },
 //     fields: 'id',
 //   });
-
 //   const fileId = response.data.id;
-
 //   if (!fileId) {
 //     throw new Error('Failed to upload file to Drive');
 //   }
-
 //   await drive.permissions.create({
 //     fileId,
 //     requestBody: {
@@ -35,6 +31,5 @@
 //       type: 'anyone',
 //     },
 //   });
-
 //   return `https://drive.google.com/uc?id=${fileId}`;
 // };
