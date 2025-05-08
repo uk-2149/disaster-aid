@@ -85,6 +85,7 @@ const Home = () => {
         needs: formData.needs,
         message: formData.message,
         location: formData.location,
+        phone: formData.phone,
         photo: downloadUrl,
         status: 'pending',
         source: 'web',

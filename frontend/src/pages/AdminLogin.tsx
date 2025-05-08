@@ -16,7 +16,6 @@ const AdminLogin = () => {
       const token = await userCredential.user.getIdToken();
   
       localStorage.setItem('token', token);
-
       navigate('/');
   
     } catch (error) {
