@@ -1,6 +1,6 @@
 # Disaster Response System
 
-The **Disaster Response System** is a web application designed to assist during emergencies by allowing users to submit voice requests for help. Users can call a designated Twilio number, leave a voice message with their details (name, needs, location), and the system processes the request, stores it in Firebase Firestore, and displays it on a React-based frontend dashboard. The backend is built with Express and TypeScript, featuring rate limiting, geolocation, and JWT authentication for secure audio playback.
+The **Disaster Response System** is a web application designed to assist during emergencies by allowing users to submit voice requests for help. Users can call a designated Twilio number, leave a voice message with their details (name, needs, location), and the system processes the request, stores it in Firebase Firestore, and displays it on a React-based frontend dashboard. The backend is built with Express and TypeScript, featuring rate limiting, geolocation, and authentication for secure audio playback.
 
 ## Features
 - **Voice Request Submission**:
